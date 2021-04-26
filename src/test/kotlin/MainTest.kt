@@ -1,5 +1,6 @@
 import com.cgm.codicefiscale.FiscalCodeCalculator
-import com.cgm.codicefiscale.Person
+import com.cgm.codicefiscale.entities.Person
+import com.cgm.codicefiscale.services.CsvDataService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -11,7 +12,8 @@ import java.time.LocalDate
 
 
 class MainTest {
-    var fiscalCodeCalculator = FiscalCodeCalculator()
+    val csvDataService = CsvDataService()
+    var fiscalCodeCalculator = FiscalCodeCalculator(csvDataService)
 
     @Test
     fun `Fiscal Code for Person with empty name`() {
@@ -25,34 +27,45 @@ class MainTest {
         assertThrows<IllegalArgumentException>{fiscalCodeCalculator.getFiscalCode(person)}
     }
 
+    @Test
+    fun `Fiscal Code for Person`() {
+        var person = Person("Silvana","Bonicelli","F","1977-05-01","Breno")
+        Assertions.assertEquals("BNCSVN77E41B149S", fiscalCodeCalculator.getFiscalCode(person))
+    }
+
     @ParameterizedTest(name = "encodeLastName function should return {1} for {0}")
     @MethodSource("encodeLastNameArguments")
     fun `Encode lastname `(lastName:String,expected: String) {
-        Assertions.assertEquals(expected, fiscalCodeCalculator.getEncodedLastName(lastName))
+        Assertions.assertEquals(expected, fiscalCodeCalculator.encodedLastName(lastName))
     }
 
     @ParameterizedTest(name = "encodeFirstName function should return {1} for {0}")
     @MethodSource("encodeFirstNameArguments")
     fun `Encode firstname `(firstName:String,expected: String ) {
-        Assertions.assertEquals(expected, fiscalCodeCalculator.getEncodedFirstName(firstName))
+        Assertions.assertEquals(expected, fiscalCodeCalculator.encodedFirstName(firstName))
     }
 
     @ParameterizedTest(name = "encodeYear function should return {1} for {0}")
     @MethodSource("encodeYearArguments")
     fun `Encode year `(dateOfBirth:LocalDate,expected: String ) {
-        Assertions.assertEquals(expected, fiscalCodeCalculator.getEncodesYearOfBirth(dateOfBirth))
+        Assertions.assertEquals(expected, fiscalCodeCalculator.encodedYearOfBirth(dateOfBirth))
     }
 
     @ParameterizedTest(name = "encodeMonth function should return {1} for {0}")
     @MethodSource("encodeMonthArguments")
     fun `Encode month `(dateOfBirth:LocalDate,expected: String ) {
-        Assertions.assertEquals(expected, fiscalCodeCalculator.getEncodedMonthOfBirth(dateOfBirth))
+        Assertions.assertEquals(expected, fiscalCodeCalculator.encodedMonthOfBirth(dateOfBirth))
     }
 
     @ParameterizedTest(name = "encodeDay function should return {1} for {0}")
     @MethodSource("encodeDayArguments")
     fun `Encode day `(dateOfBirth:LocalDate,sex: String, expected: String ) {
-        Assertions.assertEquals(expected, fiscalCodeCalculator.getEncodedDayOfBirth(dateOfBirth, sex))
+        Assertions.assertEquals(expected, fiscalCodeCalculator.encodedDayOfBirth(dateOfBirth, sex))
+    }
+    @ParameterizedTest(name = "encodeCity function should return {1} for {0}")
+    @MethodSource("encodeCityArguments")
+    fun `Encode city `(cityOfBirth:String, expected: String ) {
+        Assertions.assertEquals(expected, fiscalCodeCalculator.encodedCityOfBirth(cityOfBirth))
     }
 
     companion object {
@@ -92,6 +105,13 @@ class MainTest {
                 Arguments.of(LocalDate.parse("1977-12-01"), "M","01"),
                 Arguments.of(LocalDate.parse("1977-12-14"), "M","14")
             )
+        @JvmStatic
+        fun encodeCityArguments(): List<Arguments> =
+            listOf(
+                Arguments.of("Breno", "B149S")
+            )
+
+
     }
 
 }

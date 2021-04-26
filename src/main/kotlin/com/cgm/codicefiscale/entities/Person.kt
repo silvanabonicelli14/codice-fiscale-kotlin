@@ -1,4 +1,4 @@
-package com.cgm.codicefiscale
+package com.cgm.codicefiscale.entities
 
 open class Person(
     val firstName:String,
