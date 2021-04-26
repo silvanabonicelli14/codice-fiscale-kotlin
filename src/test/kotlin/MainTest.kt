@@ -16,21 +16,15 @@ class MainTest {
     var fiscalCodeCalculator = FiscalCodeCalculator(csvDataService)
 
     @Test
-    fun `Fiscal Code for Person with empty name`() {
+    fun `Fiscal Code for Person with empty name throws Exception`() {
         var person = Person("","","","","")
         assertThrows<IllegalArgumentException>{fiscalCodeCalculator.getFiscalCode(person)}
     }
 
     @Test
-    fun `Fiscal Code for Person with wrong date of birth`() {
+    fun `Fiscal Code for Person with wrong date of birth throws Exception`() {
         var person = Person("sasas","sasasas","sasasa","1253648","")
         assertThrows<IllegalArgumentException>{fiscalCodeCalculator.getFiscalCode(person)}
-    }
-
-    @Test
-    fun `Fiscal Code for Person`() {
-        var person = Person("Silvana","Bonicelli","F","1977-05-01","Breno")
-        Assertions.assertEquals("BNCSVN77E41B149S", fiscalCodeCalculator.getFiscalCode(person))
     }
 
     @ParameterizedTest(name = "encodeLastName function should return {1} for {0}")
@@ -64,8 +58,18 @@ class MainTest {
     }
     @ParameterizedTest(name = "encodeCity function should return {1} for {0}")
     @MethodSource("encodeCityArguments")
-    fun `Encode city `(cityOfBirth:String, expected: String ) {
+    fun `Encode valid city `(cityOfBirth:String, expected: String ) {
         Assertions.assertEquals(expected, fiscalCodeCalculator.encodedCityOfBirth(cityOfBirth))
+    }
+   @Test
+    fun `Encode not valid or not found  city  throws Exception`() {
+       assertThrows<IllegalArgumentException>{fiscalCodeCalculator.encodedCityOfBirth("dsd<as<s")}
+    }
+
+    @ParameterizedTest(name = "Calculate CF function should return {1} for {0}")
+    @MethodSource("encodeCfArguments")
+    fun `Fiscal Code for Person`(person: Person, expected: String) {
+        Assertions.assertEquals(expected, fiscalCodeCalculator.getFiscalCode(person))
     }
 
     companion object {
@@ -108,10 +112,15 @@ class MainTest {
         @JvmStatic
         fun encodeCityArguments(): List<Arguments> =
             listOf(
-                Arguments.of("Breno", "B149S")
+                Arguments.of("Breno", "B149")
             )
-
-
+        @JvmStatic
+        fun encodeCfArguments(): List<Arguments> =
+            listOf(
+                Arguments.of(
+                    Person("Silvana","Bonicelli","F","1977-05-01","Breno"),
+                    "BNCSVN77E41B149")
+            )
     }
 
 }

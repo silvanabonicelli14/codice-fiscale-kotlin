@@ -1,5 +1,7 @@
 package com.cgm.codicefiscale.services
 
+import java.time.LocalDate
+
 const val  lettersForMonths = "ABCDEHLMPRST"
 
 fun getLetters(lastName: String): Pair<String, String> {
@@ -14,3 +16,14 @@ fun getLetters(lastName: String): Pair<String, String> {
     return Pair(consonants, vowels)
 }
 
+fun checkStringValue(fieldValue: String, fieldName: String) {
+    if (fieldValue.isEmpty()) throw IllegalArgumentException("Filed $fieldName is required")
+}
+
+fun dateValidator(dateInput: String) : LocalDate {
+    try {
+        return LocalDate.parse(dateInput)
+    } catch (e: Exception) {
+        throw IllegalArgumentException("Format Date $dateInput  is not valid")
+    }
+}

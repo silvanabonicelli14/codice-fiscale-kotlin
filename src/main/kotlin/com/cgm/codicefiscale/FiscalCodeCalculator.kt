@@ -2,11 +2,10 @@ package com.cgm.codicefiscale
 
 import com.cgm.codicefiscale.entities.Person
 import com.cgm.codicefiscale.interfaces.IDataService
+import com.cgm.codicefiscale.services.checkStringValue
+import com.cgm.codicefiscale.services.dateValidator
 import com.cgm.codicefiscale.services.getLetters
 import com.cgm.codicefiscale.services.lettersForMonths
-import com.opencsv.CSVReader
-import java.io.BufferedReader
-import java.io.FileReader
 import java.lang.IllegalArgumentException
 import java.time.LocalDate
 
@@ -30,7 +29,7 @@ class FiscalCodeCalculator(dataService: IDataService){
                encodedFirstName(person.firstName) +
                encodedYearOfBirth(dateOfPerson) +
                encodedMonthOfBirth(dateOfPerson) +
-               encodedDayOfBirth (dateOfPerson, person.sex) +
+               encodedDayOfBirth (dateOfPerson, person.genre) +
                encodedCityOfBirth(person.cityOfBirth) +
                checkDigit()
     }
@@ -62,19 +61,25 @@ class FiscalCodeCalculator(dataService: IDataService){
     }
 
     fun encodedCityOfBirth(cityOfBirth: String): String {
-        val result = countryList.filter {it.first.toLowerCase().trim() == cityOfBirth.toLowerCase().trim()}
-        return result[0].second.toUpperCase()
+        val result = countryList
+            .filter {it.first.toLowerCase().trim() == cityOfBirth.toLowerCase().trim()}
+            .takeIf {
+                if (it.isNullOrEmpty()) throw IllegalArgumentException("city of birth not valid: $it")
+                return it[0].second.toUpperCase()}
     }
 
     fun checkDigit(): String = ""
 
-    private fun checkValues(person: Person) {
-        try {
-            dateOfPerson = LocalDate.parse(person.dateOfBirth)
-        } catch (e: Exception) {
-            throw IllegalArgumentException("Filed $person.dateOfBirth field is not valid")
-        }
+    fun getListOfCities(): MutableList<Pair<String, String>> {
+        return countryList
+    }
 
-        if (person.firstName.isEmpty()) throw IllegalArgumentException("Filed $person.firstName field is required")
+    private fun checkValues(person: Person) {
+        checkStringValue(person.firstName,"Name")
+        checkStringValue(person.lastName,"Lastname")
+        checkStringValue(person.dateOfBirth,"Date fo Birth")
+        checkStringValue(person.genre,"Genre")
+        checkStringValue(person.cityOfBirth,"City of Birth")
+        dateOfPerson = dateValidator(person.dateOfBirth)
     }
 }
