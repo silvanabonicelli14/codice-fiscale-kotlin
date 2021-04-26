@@ -2,36 +2,44 @@ package com.cgm.codicefiscale
 
 import com.cgm.codicefiscale.entities.Person
 import com.cgm.codicefiscale.interfaces.IDataService
-import com.cgm.codicefiscale.services.checkStringValue
-import com.cgm.codicefiscale.services.dateValidator
-import com.cgm.codicefiscale.services.getLetters
-import com.cgm.codicefiscale.services.lettersForMonths
-import java.lang.IllegalArgumentException
+import com.cgm.codicefiscale.services.*
 import java.time.LocalDate
 
 class FiscalCodeCalculator(dataService: IDataService){
     private lateinit var dateOfPerson: LocalDate
+    private lateinit var person: Person
     private var countryList = mutableListOf<Pair<String,String>>()
 
     init {
         countryList = dataService.loadData() as MutableList<Pair<String, String>>
     }
 
-    fun getFiscalCode(person: Person): String {
+    fun getFiscalCode(inputPerson: Person): String {
+        person = inputPerson
         return person.let {
-            checkValues(it)
-            calculateFiscalCode(it)
+            checkValues()
+            calculateFiscalCode()
         }
     }
+    private fun checkValues() {
+        checkStringValue(person.firstName,"Name")
+        checkStringValue(person.lastName,"Lastname")
+        checkStringValue(person.dateOfBirth,"Date fo Birth")
+        checkStringValue(person.genre,"Genre")
+        checkStringValue(person.cityOfBirth,"City of Birth")
+        dateOfPerson = dateValidator(person.dateOfBirth)
+    }
 
-    private fun calculateFiscalCode(person: Person): String {
-        return encodedLastName(person.lastName) +
-               encodedFirstName(person.firstName) +
-               encodedYearOfBirth(dateOfPerson) +
-               encodedMonthOfBirth(dateOfPerson) +
-               encodedDayOfBirth (dateOfPerson, person.genre) +
-               encodedCityOfBirth(person.cityOfBirth) +
-               checkDigit()
+    private fun calculateFiscalCode(): String {
+        val fiscalCode =
+            encodedLastName(person.lastName) +
+            encodedFirstName(person.firstName) +
+            encodedYearOfBirth(dateOfPerson) +
+            encodedMonthOfBirth(dateOfPerson) +
+            encodedDayOfBirth (dateOfPerson, person.genre) +
+            encodedCityOfBirth(person.cityOfBirth)
+
+        return fiscalCode + checkDigit(fiscalCode)
     }
 
     fun encodedFirstName(firstName: String):String {
@@ -53,33 +61,32 @@ class FiscalCodeCalculator(dataService: IDataService){
     fun encodedMonthOfBirth(date: LocalDate):String = lettersForMonths[date.monthValue -1].toString()
 
 
-    fun encodedDayOfBirth(date: LocalDate, sex: String):String{
-        return when(sex) {
+    fun encodedDayOfBirth(date: LocalDate, genre: String):String{
+        return when(genre) {
             "F" -> date.dayOfMonth.plus(40).toString()
             else -> date.dayOfMonth.toString().padStart(2,'0')
         }
     }
 
     fun encodedCityOfBirth(cityOfBirth: String): String {
-        val result = countryList
-            .filter {it.first.toLowerCase().trim() == cityOfBirth.toLowerCase().trim()}
+        countryList.filter {it.first.toLowerCase().trim() == cityOfBirth.toLowerCase().trim()}
             .takeIf {
-                if (it.isNullOrEmpty()) throw IllegalArgumentException("city of birth not valid: $it")
+                if (it.isNullOrEmpty()) throw IllegalStateException("city of birth not valid: $it")
                 return it[0].second.toUpperCase()}
     }
 
-    fun checkDigit(): String = ""
+    fun checkDigit(inputString: String): String {
+        var sumForEvanChar = 0
+        var sumForOddChar = 0
 
-    fun getListOfCities(): MutableList<Pair<String, String>> {
-        return countryList
-    }
-
-    private fun checkValues(person: Person) {
-        checkStringValue(person.firstName,"Name")
-        checkStringValue(person.lastName,"Lastname")
-        checkStringValue(person.dateOfBirth,"Date fo Birth")
-        checkStringValue(person.genre,"Genre")
-        checkStringValue(person.cityOfBirth,"City of Birth")
-        dateOfPerson = dateValidator(person.dateOfBirth)
+        for (i in inputString.indices) {
+            when( (i+1) % 2){
+                0 ->   sumForEvanChar += charForEven[inputString[i].toUpperCase().toString()]
+                    ?: error("Can't calculate check digit for $inputString")
+                else ->  sumForOddChar += charForOdd[inputString[i].toUpperCase().toString()]
+                    ?: error("Can't calculate check digit for $inputString")
+            }
+        }
+        return digitChar[((sumForEvanChar + sumForOddChar) % 26)].toString()
     }
 }

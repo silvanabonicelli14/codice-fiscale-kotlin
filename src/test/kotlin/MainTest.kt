@@ -7,7 +7,9 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import java.lang.Exception
 import java.lang.IllegalArgumentException
+import java.lang.IllegalStateException
 import java.time.LocalDate
 
 
@@ -15,16 +17,18 @@ class MainTest {
     val csvDataService = CsvDataService()
     var fiscalCodeCalculator = FiscalCodeCalculator(csvDataService)
 
-    @Test
-    fun `Fiscal Code for Person with empty name throws Exception`() {
-        var person = Person("","","","","")
-        assertThrows<IllegalArgumentException>{fiscalCodeCalculator.getFiscalCode(person)}
+
+    @ParameterizedTest(name = "encodeLastName function should return {1} for {0}")
+    @MethodSource("wrongPersonArguments")
+    fun `Fiscal Code for Person with empty field throws Exception`(person: Person, expectedMessage:String) {
+        val exception = assertThrows<IllegalArgumentException>{fiscalCodeCalculator.getFiscalCode(person)}
+        Assertions.assertEquals(expectedMessage, exception.message)
     }
 
     @Test
     fun `Fiscal Code for Person with wrong date of birth throws Exception`() {
-        var person = Person("sasas","sasasas","sasasa","1253648","")
-        assertThrows<IllegalArgumentException>{fiscalCodeCalculator.getFiscalCode(person)}
+        var person = Person("sasas","sasasas","sasasa","1253648","sasas")
+        assertThrows<IllegalStateException>{fiscalCodeCalculator.getFiscalCode(person)}
     }
 
     @ParameterizedTest(name = "encodeLastName function should return {1} for {0}")
@@ -63,14 +67,20 @@ class MainTest {
     }
    @Test
     fun `Encode not valid or not found  city  throws Exception`() {
-       assertThrows<IllegalArgumentException>{fiscalCodeCalculator.encodedCityOfBirth("dsd<as<s")}
+       assertThrows<IllegalStateException>{fiscalCodeCalculator.encodedCityOfBirth("dsd<as<s")}
     }
 
-    @ParameterizedTest(name = "Calculate CF function should return {1} for {0}")
+    @ParameterizedTest(name = "Calculate CF function should return {1}")
     @MethodSource("encodeCfArguments")
     fun `Fiscal Code for Person`(person: Person, expected: String) {
         Assertions.assertEquals(expected, fiscalCodeCalculator.getFiscalCode(person))
     }
+
+    @Test
+    fun `test check digit for fiscal code`(){
+        Assertions.assertEquals("S", fiscalCodeCalculator.checkDigit("BNCSVN77E41B149"))
+    }
+
 
     companion object {
         @JvmStatic
@@ -119,8 +129,27 @@ class MainTest {
             listOf(
                 Arguments.of(
                     Person("Silvana","Bonicelli","F","1977-05-01","Breno"),
-                    "BNCSVN77E41B149")
+                    "BNCSVN77E41B149S")
+            )
+
+        @JvmStatic
+        fun wrongPersonArguments(): List<Arguments> =
+            listOf(
+                Arguments.of(
+                    Person("","Bonicelli","F","1977-05-01","Breno"),
+                    "Filed Name is required"),
+                Arguments.of(
+                    Person("Silvana","","F","1977-05-01","Breno"),
+                    "Filed Lastname is required"),
+                Arguments.of(
+                    Person("Silvana","Bonicelli","","1977-05-01","Breno"),
+                    "Filed Genre is required"),
+                Arguments.of(
+                    Person("Silvana","Bonicelli","F","","Breno"),
+                    "Filed Date fo Birth is required"),
+                Arguments.of(
+                    Person("Silvana","Bonicelli","F","1977-05-01",""),
+                    "Filed City of Birth is required")
             )
     }
-
 }
