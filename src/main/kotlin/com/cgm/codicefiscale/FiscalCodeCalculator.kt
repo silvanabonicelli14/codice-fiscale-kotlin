@@ -1,47 +1,57 @@
 package com.cgm.codicefiscale
 
 import java.lang.IllegalArgumentException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
-class FiscalCodeCalculator {
+class FiscalCodeCalculator{
+    private lateinit var dateOfPerson: LocalDate
 
     fun getFiscalCode(person: Person): String {
         return person.let {
-            checkValues(person)
-            calculateFiscalCode(person)
+            checkValues(it)
+            calculateFiscalCode(it)
         }
     }
 
     private fun calculateFiscalCode(person: Person): String {
-        var fiscalCode = ""
+        return getEncodedLastName(person.lastName) +
+               getEncodedFirstName(person.firstName) +
+               getEncodesYearOfBirth(dateOfPerson)
+               getEncodedMonthOfBirth(dateOfPerson) +
+               getEncodedDayOfBirth (dateOfPerson, person.sex)
 
-        fiscalCode += encodeFirstName(person.firstName)
-        fiscalCode += encodeLastName(person.lastName)
-        return fiscalCode
+        val string = "July 25, 2017"
+
+        var convertedDate = LocalDate.parse(string, DateTimeFormatter.ISO_DATE)
     }
 
-    private fun checkValues(person: Person) {
-        if (person.firstName.isNullOrEmpty()) throw IllegalArgumentException("Filed field is required")
-    }
-
-    fun encodeFirstName(firstName: String):String {
-        var (consonants, vowels) = getLetters(firstName)
+    fun getEncodedFirstName(firstName: String):String {
+        val (consonants, vowels) = getLetters(firstName)
 
         consonants.takeIf {
-            if (it.length >= 4 ) return consonants[0].toString() + consonants[2].toString() + consonants[3].toString()
-            return  (consonants + vowels).toUpperCase().padStart(3,'X').take(3)
+            if (it.length >= 4 )
+                return (consonants[0].toString() + consonants[2].toString() + consonants[3].toString()).toUpperCase()
+            return  (consonants + vowels).toUpperCase().padEnd(3,'X').take(3)
         }
     }
 
-    fun encodeLastName(lastName:String):String {
-        var (consonants, vowels) = getLetters(lastName)
-        return (consonants + vowels).toUpperCase().padStart(3,'X').take(3)
+    fun getEncodedLastName(lastName:String):String {
+        val (consonants, vowels) = getLetters(lastName)
+        return (consonants + vowels).toUpperCase().padEnd(3,'X').take(3)
     }
 
-    fun getYearOfBirth():String = ""
+    fun getEncodesYearOfBirth(date: LocalDate):String = date.year.toString().takeLast(2)
 
-    fun getMonthOfBirth():String = ""
+    fun getEncodedMonthOfBirth(date: LocalDate):String = lettersForMonths[date.monthValue -1].toString()
 
-    fun getDayOfBirth():String = ""
+
+    fun getEncodedDayOfBirth(date: LocalDate, sex: String):String{
+        return when(sex) {
+            "F" -> date.dayOfMonth.plus(40).toString()
+            else -> date.dayOfMonth.toString().padStart(2,'0')
+        }
+    }
 
     fun getSex():String = ""
 
@@ -49,15 +59,13 @@ class FiscalCodeCalculator {
 
     fun checkDigit(): String = ""
 
-    private fun getLetters(lastName: String): Pair<String, String> {
-        var consonants = ""
-        var vowels = ""
-        lastName.trim().toLowerCase().forEach {
-            when (it) {
-                'a', 'e', 'i', 'o', 'u' -> vowels += it.toString()
-                in 'a'..'z' -> consonants += it.toString()
-            }
+    private fun checkValues(person: Person) {
+        try {
+            dateOfPerson = LocalDate.parse(person.dateOfBirth)
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Filed $person.dateOfBirth field is not valid")
         }
-        return Pair(consonants, vowels)
+
+        if (person.firstName.isEmpty()) throw IllegalArgumentException("Filed $person.firstName field is required")
     }
 }
