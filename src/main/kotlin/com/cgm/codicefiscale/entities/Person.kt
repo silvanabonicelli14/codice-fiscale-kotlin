@@ -5,5 +5,4 @@ open class Person(
     val lastName:String,
     val genre:String,
     val dateOfBirth:String,
-    val cityOfBirth: String) {
-}
+    val cityOfBirth: String)

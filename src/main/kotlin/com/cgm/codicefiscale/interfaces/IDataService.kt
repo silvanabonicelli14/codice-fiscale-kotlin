@@ -1,5 +1,5 @@
 package com.cgm.codicefiscale.interfaces
 
-interface IDataService {
-    fun loadData():List<Pair<String,String>>
+interface IDataService{
+    fun loadData(): List<ITable>
 }

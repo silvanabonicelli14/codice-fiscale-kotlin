@@ -3,12 +3,12 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class SqLiteDataServiceTests {
-    var sut = SqLiteDataService()
+    private var sut = SqLiteDataService()
 
     @Test
     fun `Fiscal Code for Person with empty name`() {
-        var result = sut.loadData()
+        val result = sut.loadData()
 
-        Assertions.assertEquals(2, result.size)
+        Assertions.assertEquals(7905, result.size)
     }
 }

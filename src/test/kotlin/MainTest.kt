@@ -1,6 +1,6 @@
 import com.cgm.codicefiscale.FiscalCodeCalculator
 import com.cgm.codicefiscale.entities.Person
-import com.cgm.codicefiscale.services.CsvDataService
+import com.cgm.codicefiscale.services.SqLiteDataService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -13,7 +13,7 @@ import java.time.LocalDate
 
 
 class MainTest {
-    var sut = FiscalCodeCalculator(CsvDataService())
+    private var sut = FiscalCodeCalculator(SqLiteDataService())
 
     @ParameterizedTest(name = "encodeLastName function should return {1} for {0}")
     @MethodSource("wrongPersonArguments")
@@ -24,7 +24,7 @@ class MainTest {
 
     @Test
     fun `Fiscal Code for Person with wrong date of birth throws Exception`() {
-        var person = Person("sasas","sasasas","sasasa","1253648","sasas")
+        val person = Person("sasas","sasasas","sasasa","1253648","sasas")
         assertThrows<IllegalStateException>{sut.getFiscalCode(person)}
     }
 

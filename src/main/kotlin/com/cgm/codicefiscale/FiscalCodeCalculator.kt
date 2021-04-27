@@ -1,5 +1,6 @@
 package com.cgm.codicefiscale
 
+import com.cgm.codicefiscale.entities.CountryCode
 import com.cgm.codicefiscale.entities.Person
 import com.cgm.codicefiscale.interfaces.IDataService
 import com.cgm.codicefiscale.services.*
@@ -8,10 +9,10 @@ import java.time.LocalDate
 class FiscalCodeCalculator(dataService: IDataService){
     private lateinit var dateOfPerson: LocalDate
     private lateinit var person: Person
-    private var countryList = mutableListOf<Pair<String,String>>()
+    private var countryList = mutableListOf<CountryCode>()
 
     init {
-        countryList = dataService.loadData() as MutableList<Pair<String, String>>
+        countryList = dataService.loadData() as MutableList<CountryCode>
     }
 
     fun getFiscalCode(inputPerson: Person): String {
@@ -69,10 +70,10 @@ class FiscalCodeCalculator(dataService: IDataService){
     }
 
     fun encodedCityOfBirth(inputString: String): String {
-        countryList.filter {it.first.toLowerCase().trim() == inputString.toLowerCase().trim()}
+        countryList.filter {it.country.toLowerCase().trim() == inputString.toLowerCase().trim()}
             .takeIf {
                 if (it.isNullOrEmpty()) throw IllegalStateException("city of birth not valid: $it")
-                return it[0].second.toUpperCase()}
+                return it[0].code.toUpperCase()}
     }
 
     fun checkDigit(inputString: String): String {
