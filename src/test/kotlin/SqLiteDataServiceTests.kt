@@ -8,7 +8,6 @@ class SqLiteDataServiceTests {
     @Test
     fun `Fiscal Code for Person with empty name`() {
         val result = sut.loadData()
-
         Assertions.assertEquals(7905, result.size)
     }
 }

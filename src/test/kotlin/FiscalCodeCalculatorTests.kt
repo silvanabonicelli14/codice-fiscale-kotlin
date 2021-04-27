@@ -12,10 +12,10 @@ import java.lang.IllegalStateException
 import java.time.LocalDate
 
 
-class MainTest {
+class FiscalCodeCalculatorTests {
     private var sut = FiscalCodeCalculator(SqLiteDataService())
 
-    @ParameterizedTest(name = "encodeLastName function should return {1} for {0}")
+    @ParameterizedTest(name = "encodeLastName function should return {1}")
     @MethodSource("wrongPersonArguments")
     fun `Fiscal Code for Person with empty field throws Exception`(person: Person, expectedMessage:String) {
         val exception = assertThrows<IllegalArgumentException>{sut.getFiscalCode(person)}
@@ -27,6 +27,27 @@ class MainTest {
         val person = Person("sasas","sasasas","sasasa","1253648","sasas")
         assertThrows<IllegalStateException>{sut.getFiscalCode(person)}
     }
+
+    @Test
+    fun `Fiscal Code for Person with wrong Genre throws Exception`() {
+        val person = Person("sasas","sasasas","sasasa","1977-05-01","sasas")
+        val exception = assertThrows<IllegalStateException>{sut.getFiscalCode(person)}
+        Assertions.assertEquals("Value for Genre field is not valid", exception.message)
+    }
+
+    @Test
+    fun `Fiscal Code for Person with wrong Country of birth throws Exception`() {
+        val person = Person("sasas","sasasas","F","1977-05-01","sasas")
+        val exception = assertThrows<IllegalStateException>{sut.getFiscalCode(person)}
+        exception.message?.let { Assertions.assertTrue(it.contains("city of birth not valid")) }
+    }
+
+    @ParameterizedTest(name = "Calculate CF function should return {1}")
+    @MethodSource("encodeCfArguments")
+    fun `Fiscal Code for Person Happy Path`(person: Person, expected: String) {
+        Assertions.assertEquals(expected, sut.getFiscalCode(person))
+    }
+
 
     @ParameterizedTest(name = "encodeLastName function should return {1} for {0}")
     @MethodSource("encodeLastNameArguments")
@@ -67,17 +88,10 @@ class MainTest {
        assertThrows<IllegalStateException>{sut.encodedCityOfBirth("dsd<as<s")}
     }
 
-    @ParameterizedTest(name = "Calculate CF function should return {1}")
-    @MethodSource("encodeCfArguments")
-    fun `Fiscal Code for Person`(person: Person, expected: String) {
-        Assertions.assertEquals(expected, sut.getFiscalCode(person))
-    }
-
     @Test
     fun `test check digit for fiscal code`(){
         Assertions.assertEquals("S", sut.checkDigit("BNCSVN77E41B149"))
     }
-
 
     companion object {
         @JvmStatic
