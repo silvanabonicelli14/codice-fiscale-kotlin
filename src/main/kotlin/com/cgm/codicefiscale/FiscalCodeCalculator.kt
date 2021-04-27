@@ -42,8 +42,8 @@ class FiscalCodeCalculator(dataService: IDataService){
         return fiscalCode + checkDigit(fiscalCode)
     }
 
-    fun encodedFirstName(firstName: String):String {
-        val (consonants, vowels) = getLetters(firstName)
+    fun encodedFirstName(inputString: String):String {
+        val (consonants, vowels) = getLetters(inputString)
         consonants.takeIf {
             if (it.length >= 4 )
                 return (consonants[0].toString() + consonants[2].toString() + consonants[3].toString()).toUpperCase()
@@ -51,8 +51,8 @@ class FiscalCodeCalculator(dataService: IDataService){
         }
     }
 
-    fun encodedLastName(lastName:String):String {
-        val (consonants, vowels) = getLetters(lastName)
+    fun encodedLastName(inputString:String):String {
+        val (consonants, vowels) = getLetters(inputString)
         return (consonants + vowels).toUpperCase().padEnd(3,'X').take(3)
     }
 
@@ -68,8 +68,8 @@ class FiscalCodeCalculator(dataService: IDataService){
         }
     }
 
-    fun encodedCityOfBirth(cityOfBirth: String): String {
-        countryList.filter {it.first.toLowerCase().trim() == cityOfBirth.toLowerCase().trim()}
+    fun encodedCityOfBirth(inputString: String): String {
+        countryList.filter {it.first.toLowerCase().trim() == inputString.toLowerCase().trim()}
             .takeIf {
                 if (it.isNullOrEmpty()) throw IllegalStateException("city of birth not valid: $it")
                 return it[0].second.toUpperCase()}

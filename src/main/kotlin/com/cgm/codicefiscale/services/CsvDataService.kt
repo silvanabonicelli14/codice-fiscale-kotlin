@@ -1,38 +1,24 @@
 package com.cgm.codicefiscale.services
 
 import com.cgm.codicefiscale.interfaces.IDataService
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVParser
 import java.io.File
 
 class CsvDataService: IDataService {
     override fun loadData(): List<Pair<String, String>> {
-//        val out = mutableListOf<Pair<String,String>>()
-//        try {
-//
-//            val csvReader = CsvDataService::class.java.getResource("Elenco-comuni-italiani.csv")
-//                ?.let {
-//                    val csvParser = CSVParser(File(it.toURI()).bufferedReader(), CSVFormat.DEFAULT)
-//                    for (csvRecord in csvParser) {
-//
-////            out.add(Pair( csvRecord[5], csvRecord[19]))
-////            val name = csvRecord[5]
-////            val email = csvRecord[19]
-//
-//                        println("Phone : $csvRecord")
-////            println("Country : $email")
-//                        println("---------------\n\n")
-//                    }
-//
-//                }
-//                ?: error("Path not found")
-//        }catch (e:Exception){
-//            e.printStackTrace()
-//        }finally {
-//            return out
-//        }
-        val out = mutableListOf<Pair<String,String>>()
-        out.add(Pair("Breno","B149"))
-        return out
+        val listOfCodeCountries = mutableListOf<Pair<String,String>>()
+        try {
+            val fileName = "D:\\Corsi formazione\\Kotlin\\codice-fiscale-kotlin\\target\\classes\\Elenco-comuni-italiani.csv"
+            //val fileName = CsvDataService::class.java.getResource("Elenco-comuni-italiani.csv").file
+            File(fileName).forEachLine {
+                try {
+                    listOfCodeCountries.add(Pair(it.split(";")[5], it.split(";")[19]))
+                }
+                catch (e:Exception){}
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+        }finally {
+            return listOfCodeCountries
+        }
     }
 }

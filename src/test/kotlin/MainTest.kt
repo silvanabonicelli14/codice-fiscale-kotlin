@@ -7,78 +7,75 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import java.lang.Exception
 import java.lang.IllegalArgumentException
 import java.lang.IllegalStateException
 import java.time.LocalDate
 
 
 class MainTest {
-    val csvDataService = CsvDataService()
-    var fiscalCodeCalculator = FiscalCodeCalculator(csvDataService)
-
+    var sut = FiscalCodeCalculator(CsvDataService())
 
     @ParameterizedTest(name = "encodeLastName function should return {1} for {0}")
     @MethodSource("wrongPersonArguments")
     fun `Fiscal Code for Person with empty field throws Exception`(person: Person, expectedMessage:String) {
-        val exception = assertThrows<IllegalArgumentException>{fiscalCodeCalculator.getFiscalCode(person)}
+        val exception = assertThrows<IllegalArgumentException>{sut.getFiscalCode(person)}
         Assertions.assertEquals(expectedMessage, exception.message)
     }
 
     @Test
     fun `Fiscal Code for Person with wrong date of birth throws Exception`() {
         var person = Person("sasas","sasasas","sasasa","1253648","sasas")
-        assertThrows<IllegalStateException>{fiscalCodeCalculator.getFiscalCode(person)}
+        assertThrows<IllegalStateException>{sut.getFiscalCode(person)}
     }
 
     @ParameterizedTest(name = "encodeLastName function should return {1} for {0}")
     @MethodSource("encodeLastNameArguments")
     fun `Encode lastname `(lastName:String,expected: String) {
-        Assertions.assertEquals(expected, fiscalCodeCalculator.encodedLastName(lastName))
+        Assertions.assertEquals(expected, sut.encodedLastName(lastName))
     }
 
     @ParameterizedTest(name = "encodeFirstName function should return {1} for {0}")
     @MethodSource("encodeFirstNameArguments")
     fun `Encode firstname `(firstName:String,expected: String ) {
-        Assertions.assertEquals(expected, fiscalCodeCalculator.encodedFirstName(firstName))
+        Assertions.assertEquals(expected, sut.encodedFirstName(firstName))
     }
 
     @ParameterizedTest(name = "encodeYear function should return {1} for {0}")
     @MethodSource("encodeYearArguments")
     fun `Encode year `(dateOfBirth:LocalDate,expected: String ) {
-        Assertions.assertEquals(expected, fiscalCodeCalculator.encodedYearOfBirth(dateOfBirth))
+        Assertions.assertEquals(expected, sut.encodedYearOfBirth(dateOfBirth))
     }
 
     @ParameterizedTest(name = "encodeMonth function should return {1} for {0}")
     @MethodSource("encodeMonthArguments")
     fun `Encode month `(dateOfBirth:LocalDate,expected: String ) {
-        Assertions.assertEquals(expected, fiscalCodeCalculator.encodedMonthOfBirth(dateOfBirth))
+        Assertions.assertEquals(expected, sut.encodedMonthOfBirth(dateOfBirth))
     }
 
     @ParameterizedTest(name = "encodeDay function should return {1} for {0}")
     @MethodSource("encodeDayArguments")
     fun `Encode day `(dateOfBirth:LocalDate,sex: String, expected: String ) {
-        Assertions.assertEquals(expected, fiscalCodeCalculator.encodedDayOfBirth(dateOfBirth, sex))
+        Assertions.assertEquals(expected, sut.encodedDayOfBirth(dateOfBirth, sex))
     }
     @ParameterizedTest(name = "encodeCity function should return {1} for {0}")
     @MethodSource("encodeCityArguments")
     fun `Encode valid city `(cityOfBirth:String, expected: String ) {
-        Assertions.assertEquals(expected, fiscalCodeCalculator.encodedCityOfBirth(cityOfBirth))
+        Assertions.assertEquals(expected, sut.encodedCityOfBirth(cityOfBirth))
     }
    @Test
     fun `Encode not valid or not found  city  throws Exception`() {
-       assertThrows<IllegalStateException>{fiscalCodeCalculator.encodedCityOfBirth("dsd<as<s")}
+       assertThrows<IllegalStateException>{sut.encodedCityOfBirth("dsd<as<s")}
     }
 
     @ParameterizedTest(name = "Calculate CF function should return {1}")
     @MethodSource("encodeCfArguments")
     fun `Fiscal Code for Person`(person: Person, expected: String) {
-        Assertions.assertEquals(expected, fiscalCodeCalculator.getFiscalCode(person))
+        Assertions.assertEquals(expected, sut.getFiscalCode(person))
     }
 
     @Test
     fun `test check digit for fiscal code`(){
-        Assertions.assertEquals("S", fiscalCodeCalculator.checkDigit("BNCSVN77E41B149"))
+        Assertions.assertEquals("S", sut.checkDigit("BNCSVN77E41B149"))
     }
 
 
@@ -129,7 +126,10 @@ class MainTest {
             listOf(
                 Arguments.of(
                     Person("Silvana","Bonicelli","F","1977-05-01","Breno"),
-                    "BNCSVN77E41B149S")
+                    "BNCSVN77E41B149S"),
+                Arguments.of(
+                        Person("Alessandro","Fiorini","M","1976-09-09","Lovere"),
+                "FRNLSN76P09E704H")
             )
 
         @JvmStatic

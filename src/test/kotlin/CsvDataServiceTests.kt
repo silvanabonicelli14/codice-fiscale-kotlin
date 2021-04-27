@@ -7,12 +7,12 @@ import org.junit.jupiter.api.assertThrows
 import java.lang.IllegalArgumentException
 
 class CsvDataServiceTests {
-    var csvDataService = CsvDataService()
+    var sut = CsvDataService()
 
     @Test
     fun `Fiscal Code for Person with empty name`() {
-        var result = csvDataService.loadData()
+        var result = sut.loadData()
 
-        Assertions.assertEquals(1, result.size)
+        Assertions.assertEquals(7904, result.size)
     }
 }
