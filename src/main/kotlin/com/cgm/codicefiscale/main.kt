@@ -2,7 +2,7 @@ package com.cgm.codicefiscale
 
 import com.cgm.codicefiscale.entities.Person
 import com.cgm.codicefiscale.services.SqLiteDataService
-import com.cgm.codicefiscale.services.getValueFromCommandLine
+import com.cgm.codicefiscale.helpers.getValueFromCommandLine
 
 fun main() {
     val firstName = getValueFromCommandLine("firstName")

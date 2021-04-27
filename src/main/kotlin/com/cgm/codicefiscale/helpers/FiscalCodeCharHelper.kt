@@ -1,7 +1,4 @@
-package com.cgm.codicefiscale.services
-
-import java.lang.IllegalStateException
-import java.time.LocalDate
+package com.cgm.codicefiscale.helpers
 
 const val  lettersForMonths = "ABCDEHLMPRST"
 
@@ -42,21 +39,4 @@ fun getLetters(lastName: String): Pair<String, String> {
         }
     }
     return Pair(consonants, vowels)
-}
-
-fun checkStringValue(fieldValue: String, fieldName: String) {
-    if (fieldValue.isEmpty()) throw IllegalArgumentException("Filed $fieldName is required")
-}
-
-fun dateValidator(dateInput: String) : LocalDate {
-    try {
-        return LocalDate.parse(dateInput)
-    } catch (e: Exception) {
-        throw IllegalStateException("Format Date $dateInput  is not valid")
-    }
-}
-
-fun getValueFromCommandLine(context: String): String? {
-    println("Insert value of $context")
-    return readLine()
 }
