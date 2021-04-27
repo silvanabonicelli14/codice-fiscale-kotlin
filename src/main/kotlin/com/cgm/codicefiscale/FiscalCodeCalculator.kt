@@ -63,7 +63,7 @@ class FiscalCodeCalculator(dataService: IDataService){
 
 
     fun encodedDayOfBirth(date: LocalDate, genre: String):String{
-        return when(genre) {
+        return when(genre.toUpperCase()) {
             "F" -> date.dayOfMonth.plus(40).toString()
             else -> date.dayOfMonth.toString().padStart(2,'0')
         }

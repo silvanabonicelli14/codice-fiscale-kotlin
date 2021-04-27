@@ -55,3 +55,8 @@ fun dateValidator(dateInput: String) : LocalDate {
         throw IllegalStateException("Format Date $dateInput  is not valid")
     }
 }
+
+fun getValueFromCommandLine(context: String): String? {
+    println("Insert value of $context")
+    return readLine()
+}
