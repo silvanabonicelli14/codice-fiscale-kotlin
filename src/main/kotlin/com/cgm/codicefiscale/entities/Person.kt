@@ -1,8 +1,12 @@
 package com.cgm.codicefiscale.entities
 
-open class Person(
-    val firstName:String,
-    val lastName:String,
-    val genre:String,
-    val dateOfBirth:String,
-    val cityOfBirth: String)
+import com.cgm.codicefiscale.helpers.Genre
+import java.time.LocalDate
+
+class Person(
+    val firstName: String,
+    val lastName: String,
+    val genre: Genre,
+    val dateOfBirth: LocalDate,
+    val cityOfBirth: String,
+)

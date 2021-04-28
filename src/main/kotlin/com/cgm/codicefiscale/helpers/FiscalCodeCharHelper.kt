@@ -40,8 +40,3 @@ fun getLetters(lastName: String): Pair<String, String> {
     }
     return Pair(consonants, vowels)
 }
-
-enum class Genre{
-    F,
-    M
-}

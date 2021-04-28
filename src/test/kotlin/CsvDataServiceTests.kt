@@ -7,7 +7,7 @@ class CsvDataServiceTests {
 
     @Test
     fun `Fiscal Code for Person with empty name`() {
-        val result = sut.loadData()
+        val result = sut.loadCountryCode()
         Assertions.assertEquals(7904, result.size)
     }
 }

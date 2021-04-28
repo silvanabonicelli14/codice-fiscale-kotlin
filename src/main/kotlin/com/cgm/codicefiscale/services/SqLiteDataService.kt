@@ -6,7 +6,7 @@ import org.sql2o.Sql2o
 
 class SqLiteDataService: IDataService {
 
-    override fun loadData(): List<CountryCode> {
+    override fun loadCountryCode(): List<CountryCode> {
         val sql2o =
             Sql2o("jdbc:sqlite:D:\\Corsi formazione\\Kotlin\\codice-fiscale-kotlin\\src\\main\\resources\\dbCodiciComuni.db", null, null)
         sql2o.open().use { con ->

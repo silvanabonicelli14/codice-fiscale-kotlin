@@ -6,11 +6,11 @@ import java.io.File
 
 class CsvDataService: IDataService {
 
-    override fun loadData(): List<CountryCode> {
+    override fun loadCountryCode(): List<CountryCode> {
         val listOfCodeCountries = mutableListOf<CountryCode>()
         try {
             val fileName = "D:\\Corsi formazione\\Kotlin\\codice-fiscale-kotlin\\target\\classes\\Elenco-comuni-italiani.csv"
-            //val fileName = CsvDataService::class.java.getResource("Elenco-comuni-italiani.csv").file
+//            val fileName = CsvDataService::class.java.getResource("Elenco-comuni-italiani.csv")
             File(fileName).forEachLine {
                 try {
                     listOfCodeCountries.add(CountryCode(it.split(";")[5],it.split(";")[19]))

@@ -21,24 +21,18 @@ class DataServiceFactoryTests {
     }
 
     @Test
-    fun `Get Data Service from mode value manual return mode `() {
-        val result = sut.getDataServiceByModeValue("csv")
-        Assertions.assertTrue(result is CsvDataService)
+    fun `Get Data Service from not valid model value manual throw exception `() {
+        assertThrows<IllegalStateException>{sut.getDataService("blabla")}
     }
 
     @Test
-    fun `Get Data Service from not valid mode value manual throw exception `() {
-        assertThrows<IllegalStateException>{sut.getDataServiceByModeValue("blabla")}
-    }
-
-    @Test
-    fun `Get Data Service without mode return default mode from environment `() {
+    fun `Get Data Service without model return default mode from environment `() {
         val result = sut.getDataService("")
         Assertions.assertTrue(result is CsvDataService)
     }
 
     @Test
-    fun `Get Data Service with specific mode  mode return default mode from environment `() {
+    fun `Get Data Service with specific mode  mode return mode`() {
         val result = sut.getDataService("sqlite")
         Assertions.assertTrue(result is SqLiteDataService)
     }
