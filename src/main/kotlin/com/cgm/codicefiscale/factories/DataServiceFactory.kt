@@ -2,6 +2,7 @@ package com.cgm.codicefiscale.factories
 
 import com.cgm.codicefiscale.interfaces.IDataService
 import com.cgm.codicefiscale.services.CsvDataService
+import com.cgm.codicefiscale.services.PostgresDataService
 import com.cgm.codicefiscale.services.SqLiteDataService
 
 const val ENV_MOD_LOAD_DATA: String  = "CFDATASERVICE"
@@ -24,6 +25,7 @@ class DataServiceFactory {
         return when (value.toUpperCase()) {
             DataService.CSV.toString() -> {CsvDataService()}
             DataService.SQLITE.toString() -> {SqLiteDataService()}
+            DataService.POSTGRE.toString() -> {PostgresDataService()}
             else -> { error("Invalid dataService")}
         }
     }
@@ -31,5 +33,6 @@ class DataServiceFactory {
 
 enum class DataService{
     CSV,
-    SQLITE
+    SQLITE,
+    POSTGRE
 }

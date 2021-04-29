@@ -1,7 +1,7 @@
 import com.cgm.codicefiscale.FiscalCodeCalculator
 import com.cgm.codicefiscale.entities.Person
 import com.cgm.codicefiscale.helpers.Genre
-import com.cgm.codicefiscale.services.SqLiteDataService
+import com.cgm.codicefiscale.services.PostgresDataService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -12,7 +12,7 @@ import java.lang.IllegalStateException
 import java.time.LocalDate
 
 class FiscalCodeCalculatorTests {
-    private var sut = FiscalCodeCalculator(SqLiteDataService())
+    private var sut = FiscalCodeCalculator(PostgresDataService())
 
     @ParameterizedTest(name = "Calculate CF function should return {1}")
     @MethodSource("encodeCfArguments")

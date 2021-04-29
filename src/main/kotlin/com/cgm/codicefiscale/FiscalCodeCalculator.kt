@@ -8,8 +8,6 @@ import java.time.LocalDate
 
 class FiscalCodeCalculator(dataService: IDataService) {
 
-    private lateinit var person: Person
-
     fun getFiscalCode(inputPerson: Person): String {
         person = inputPerson
         val fiscalCode =
@@ -22,6 +20,7 @@ class FiscalCodeCalculator(dataService: IDataService) {
 
         return fiscalCode + checkDigit(fiscalCode)
     }
+    private lateinit var person: Person
 
     private val countryCodeList: List<CountryCode> by lazy {
         dataService.loadCountryCode()
