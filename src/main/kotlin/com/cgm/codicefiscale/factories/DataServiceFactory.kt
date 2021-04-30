@@ -1,23 +1,23 @@
 package com.cgm.codicefiscale.factories
 
+import ENV_MOD_LOAD_DATA
 import com.cgm.codicefiscale.interfaces.IDataService
 import com.cgm.codicefiscale.services.CsvDataService
 import com.cgm.codicefiscale.services.PostgresDataService
 import com.cgm.codicefiscale.services.SqLiteDataService
 
-const val ENV_MOD_LOAD_DATA: String  = "CFDATASERVICE"
-
 class DataServiceFactory {
-    fun getDataService(dataServiceMode: String?): IDataService {
-        return when (dataServiceMode.isNullOrEmpty()) {
-            true -> { DataServiceFactory().getDataServiceFromEnvironment() }
-            false -> { DataServiceFactory().getDataServiceByModelValue(dataServiceMode)}
-        }
-    }
 
     fun getDataServiceFromEnvironment(variableName: String = ENV_MOD_LOAD_DATA): IDataService {
         (System.getenv(variableName)?.toUpperCase()?: DataService.CSV.toString()).apply {
             return getDataServiceByModelValue(this)
+        }
+    }
+
+    fun getDataService(dataServiceMode: String?): IDataService {
+        return when (dataServiceMode.isNullOrEmpty()) {
+            true -> { DataServiceFactory().getDataServiceFromEnvironment() }
+            false -> { DataServiceFactory().getDataServiceByModelValue(dataServiceMode)}
         }
     }
 
@@ -30,7 +30,6 @@ class DataServiceFactory {
         }
     }
 }
-
 enum class DataService{
     CSV,
     SQLITE,

@@ -1,14 +1,14 @@
 package com.cgm.codicefiscale.helpers
 
-const val  lettersForMonths = "ABCDEHLMPRST"
+const val lettersForMonths = "ABCDEHLMPRST"
 
 val charForOdd = mapOf(
     "0" to 1, "1" to 0, "2" to 5, "3" to 7, "4" to 9, "5" to 13,
-    "6" to 15, "7" to 17, "8" to 19,"9" to 21, "A" to 1, "B" to 0,
-    "C" to 5, "D" to 7, "E" to 9,"F" to 13, "G" to 15, "H" to 17,
-    "I" to 19, "J" to 21, "K" to 2,"L" to 4, "M" to 18, "N" to 20,
-    "O" to 11, "P" to 3, "Q" to 6,"R" to 8, "S" to 12, "T" to 14,
-    "U" to 16, "V" to 10, "W" to 22,"X" to 25, "Y" to 24, "Z" to 23
+    "6" to 15, "7" to 17, "8" to 19, "9" to 21, "A" to 1, "B" to 0,
+    "C" to 5, "D" to 7, "E" to 9, "F" to 13, "G" to 15, "H" to 17,
+    "I" to 19, "J" to 21, "K" to 2, "L" to 4, "M" to 18, "N" to 20,
+    "O" to 11, "P" to 3, "Q" to 6, "R" to 8, "S" to 12, "T" to 14,
+    "U" to 16, "V" to 10, "W" to 22, "X" to 25, "Y" to 24, "Z" to 23
 )
 
 val charForEven = mapOf(
@@ -27,7 +27,6 @@ val digitChar = mapOf(
     18 to "S", 19 to "T", 20 to "U", 21 to "V", 22 to "W", 23 to "X",
     24 to "Y", 25 to "Z"
 )
-
 
 fun getLetters(lastName: String): Pair<String, String> {
     var consonants = ""

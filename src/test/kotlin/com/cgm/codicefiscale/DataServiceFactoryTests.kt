@@ -1,3 +1,5 @@
+package com.cgm.codicefiscale
+
 import com.cgm.codicefiscale.services.CsvDataService
 import com.cgm.codicefiscale.factories.DataServiceFactory
 import com.cgm.codicefiscale.services.SqLiteDataService
@@ -14,9 +16,16 @@ class DataServiceFactoryTests {
         val result = sut.getDataServiceFromEnvironment()
         Assertions.assertTrue(result is CsvDataService)
     }
+
     @Test
     fun `Get Data Service from not existing system environment variable return default value csv`() {
         val result = sut.getDataServiceFromEnvironment("BLABLA")
+        Assertions.assertTrue(result is CsvDataService)
+    }
+
+    @Test
+    fun `Get Data Service from  system environment variable return variable value `() {
+        val result = sut.getDataServiceFromEnvironment("CFDATASERVICE")
         Assertions.assertTrue(result is CsvDataService)
     }
 

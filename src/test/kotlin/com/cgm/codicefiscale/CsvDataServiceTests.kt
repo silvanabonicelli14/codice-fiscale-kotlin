@@ -1,9 +1,11 @@
-import com.cgm.codicefiscale.services.PostgresDataService
+package com.cgm.codicefiscale
+
+import com.cgm.codicefiscale.services.CsvDataService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class PostgresDataServiceTests {
-    private var sut = PostgresDataService()
+class CsvDataServiceTests {
+    private var sut = CsvDataService()
 
     @Test
     fun `Fiscal Code for Person with empty name`() {

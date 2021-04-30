@@ -14,7 +14,7 @@ fun main() {
                 getValueFromCommandLine("lastName"),
                 getValueFromCommandLine("dateOfBirth [yyyy-MM-dd]"),
                 getValueFromCommandLine("genre"),
-                getValueFromCommandLine("data Service mode")
+                getValueFromCommandLine("city of Birth")
             )
         print(
             "Your FiscalCode is ${

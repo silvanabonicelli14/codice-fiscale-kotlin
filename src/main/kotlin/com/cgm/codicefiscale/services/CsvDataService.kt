@@ -1,28 +1,23 @@
 package com.cgm.codicefiscale.services
 
+import CONN_STRING_CSV
 import com.cgm.codicefiscale.entities.CountryCode
 import com.cgm.codicefiscale.interfaces.IDataService
 import java.io.File
 
-class CsvDataService: IDataService {
+class CsvDataService : IDataService {
 
     override fun loadCountryCode(): List<CountryCode> {
         val listOfCodeCountries = mutableListOf<CountryCode>()
         try {
-            val fileName = "D:\\Corsi formazione\\Kotlin\\codice-fiscale-kotlin\\target\\classes\\Elenco-comuni-italiani.csv"
-//            val fileName = CsvDataService::class.java.getResource("Elenco-comuni-italiani.csv")
-            File(fileName).forEachLine {
-                try {
-                    listOfCodeCountries.add(CountryCode(it.split(";")[5],it.split(";")[19]))
-                }
-                catch (e:Exception){
-                    //skip line non valid (header line)
-                }
+//          val fileName = CsvDataService::class.java.getResource(CONN_STRING_CSV) //Non Funziona questo :-(
+            File(CONN_STRING_CSV).forEachLine { line ->
+                line.takeIf { (it.split(";")).size >= 19 }
+                    ?.let { listOfCodeCountries.add(CountryCode(it.split(";")[5], it.split(";")[19])) }
             }
-        }catch (e:Exception){
-            e.printStackTrace()
-        }finally {
             return listOfCodeCountries
+        } catch (e: Exception) {
+            throw e
         }
     }
 }

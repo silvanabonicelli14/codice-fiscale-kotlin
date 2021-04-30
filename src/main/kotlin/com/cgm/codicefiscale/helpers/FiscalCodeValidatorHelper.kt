@@ -7,7 +7,7 @@ fun checkStringValue(fieldValue: String, fieldName: String) {
     if (fieldValue.isEmpty()) throw IllegalArgumentException("Filed $fieldName is required")
 }
 
-fun dateValidator(dateInput: String) : LocalDate {
+fun dateValidator(dateInput: String): LocalDate {
     try {
         return LocalDate.parse(dateInput)
     } catch (e: Exception) {
@@ -27,6 +27,7 @@ fun validatePerson(
     genre: String,
     cityOfBirth: String
 ): Person {
+
     checkStringValue(firstName, "FirstName")
     checkStringValue(lastName, "Lastname")
     checkStringValue(dateOfBirth, "Date fo Birth")
@@ -35,11 +36,14 @@ fun validatePerson(
     checkStringValue(cityOfBirth, "City of Birth")
 
     dateValidator(dateOfBirth).let {
-        if(it <= LocalDate.now()){
-            when {
-                enumGenre != null -> return Person(firstName, lastName, enumGenre, it, cityOfBirth)
-                else -> throw IllegalArgumentException("Genre not valid")
-            }}
+        when {
+            it <= LocalDate.now() -> {
+                when {
+                    enumGenre != null -> return Person(firstName, lastName, enumGenre, it, cityOfBirth)
+                    else -> throw IllegalArgumentException("Genre not valid")
+                }
+            }
+        }
         throw IllegalArgumentException("dateOfBirth not valid")
     }
 }
@@ -48,7 +52,7 @@ inline fun <reified T : Enum<T>> enumValueOfOrNull(name: String): T? {
     return enumValues<T>().find { it.name == name }
 }
 
-enum class Genre{
+enum class Genre {
     F,
     M
 }

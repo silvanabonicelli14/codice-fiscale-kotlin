@@ -1,4 +1,5 @@
-import com.cgm.codicefiscale.FiscalCodeCalculator
+package com.cgm.codicefiscale
+
 import com.cgm.codicefiscale.entities.Person
 import com.cgm.codicefiscale.helpers.Genre
 import com.cgm.codicefiscale.services.PostgresDataService

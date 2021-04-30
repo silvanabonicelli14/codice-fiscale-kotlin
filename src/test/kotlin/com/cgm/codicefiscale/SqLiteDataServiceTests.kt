@@ -1,3 +1,5 @@
+package com.cgm.codicefiscale
+
 import com.cgm.codicefiscale.services.SqLiteDataService
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
