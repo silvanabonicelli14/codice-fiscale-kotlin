@@ -1,19 +1,18 @@
 package com.cgm.codicefiscale
 
+import com.cgm.codicefiscale.entities.Person
 import com.cgm.codicefiscale.factories.DataServiceFactory
-import com.cgm.codicefiscale.helpers.getValueFromCommandLine
-import com.cgm.codicefiscale.helpers.validatePerson
 import java.lang.Exception
 
 fun main() {
     try {
         val dataServiceMode = getValueFromCommandLine("data Service mode")
         val person =
-            validatePerson(
+            Person.of(
                 getValueFromCommandLine("firstName"),
                 getValueFromCommandLine("lastName"),
-                getValueFromCommandLine("dateOfBirth [yyyy-MM-dd]"),
                 getValueFromCommandLine("genre"),
+                getValueFromCommandLine("dateOfBirth [yyyy-MM-dd]"),
                 getValueFromCommandLine("city of Birth")
             )
         print(
@@ -24,4 +23,9 @@ fun main() {
     } catch (x: Exception) {
         println(x.message)
     }
+}
+
+fun getValueFromCommandLine(context: String): String {
+    println("Insert value of $context")
+    return readLine() ?: ""
 }
